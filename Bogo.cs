@@ -46,5 +46,41 @@ namespace BogoLib
 
             return newArray;
         }
+        public static int Find(T[] array, T target, Random rand = null)
+        {
+            if (array.Length == 0)
+                throw new Exception(); // TODO
+
+            if (rand is null)
+                rand = new Random();
+
+            bool[] usedIndex = new bool[array.Length];
+            bool allChecked = false;
+
+            while (!allChecked)
+            {
+                int index = rand.Next(array.Length);
+
+                while (usedIndex[index])
+                    index = rand.Next(array.Length);
+                
+                usedIndex[index] = true;
+
+                if (array[index].CompareTo(target) == 0)
+                    return index;
+                
+                allChecked = true;
+                foreach (bool item in usedIndex)
+                {
+                    if (!item)
+                    {
+                        allChecked = false;
+                        break;
+                    }
+                }
+            }
+
+            return -1;
+        }
     }
 }
