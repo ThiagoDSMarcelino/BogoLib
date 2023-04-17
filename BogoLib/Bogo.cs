@@ -2,16 +2,15 @@ using System;
 
 namespace BogoLib
 {
-    public static class Bogo<T>
-        where T : IComparable
+    public static class Bogo
     {
-        public static T[] Sort(T[] array, bool descending = false, Random rand = null)
+        public static T[] BogoSort<T>(this T[] array, bool descending = false)
+            where T : IComparable
         {
-            if (rand is null)
-                rand = new Random();
-
+            Random random = Random.Shared;
             bool isSorted = false;
             T[] newArray = new T[array.Length];
+
             array.CopyTo(newArray, 0);
 
             while (!isSorted)
@@ -19,7 +18,7 @@ namespace BogoLib
                 int n = newArray.Length;
                 while (n > 1) 
                 {
-                    int k = rand.Next(n--);
+                    int k = random.Next(n--);
                     T temp = newArray[n];
                     newArray[n] = newArray[k];
                     newArray[k] = temp;
@@ -42,27 +41,26 @@ namespace BogoLib
                 }
             }
             
-
-
             return newArray;
         }
-        public static int Find(T[] array, T target, Random rand = null)
+
+        public static int BogoFind<T>(this T[] array, T target)
+            where T : IComparable
         {
             if (array.Length == 0)
-                throw new Exception(); // TODO
+                throw new Exception();
 
-            if (rand is null)
-                rand = new Random();
+            Random random = Random.Shared;
 
             bool[] usedIndex = new bool[array.Length];
             bool allChecked = false;
 
             while (!allChecked)
             {
-                int index = rand.Next(array.Length);
+                int index = random.Next(array.Length);
 
                 while (usedIndex[index])
-                    index = rand.Next(array.Length);
+                    index = random.Next(array.Length);
                 
                 usedIndex[index] = true;
 
