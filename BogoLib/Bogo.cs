@@ -1,47 +1,71 @@
 using System;
+using System.Runtime.InteropServices;
 
 namespace BogoLib
 {
     public static class Bogo
     {
-        public static T[] BogoSort<T>(this T[] array, bool descending = false)
+        public enum BogoSortType
+        {
+            Shuffle,
+            OneByOne,
+            Checking
+        }
+
+        public static T[] BogoSort<T>(this T[] array, bool descending = false, BogoSortType type = BogoSortType.Shuffle)
+            where T : IComparable
+        {
+            T[] result = (T[])array.Clone();
+
+            switch (type)
+            {
+                case BogoSortType.Shuffle:
+                    result = result.Shuffle(descending);
+                    break;
+                
+                case BogoSortType.OneByOne:
+                    throw new NotImplementedException();
+                
+                case BogoSortType.Checking:
+                    throw new NotImplementedException();
+            }
+
+            return result;
+        }
+
+        private static T[] Shuffle<T>(this T[] array, bool descending = false)
             where T : IComparable
         {
             Random random = Random.Shared;
             bool isSorted = false;
-            T[] newArray = new T[array.Length];
-
-            array.CopyTo(newArray, 0);
 
             while (!isSorted)
             {
-                int n = newArray.Length;
-                while (n > 1) 
+                int n = array.Length;
+                while (n > 1)
                 {
                     int k = random.Next(n--);
-                    T temp = newArray[n];
-                    newArray[n] = newArray[k];
-                    newArray[k] = temp;
+                    (array[k], array[n]) = (array[n], array[k]);
                 }
 
                 isSorted = true;
-                for (int i = 0; i < newArray.Length - 1; i++)
+                for (int i = 0; i < array.Length - 1; i++)
                 {
-                    if (newArray[i].CompareTo(newArray[i+1]) == 1 && !descending)
+                    if (array[i].CompareTo(array[i + 1]) == 1 && !descending)
                     {
                         isSorted = false;
                         break;
                     }
 
-                    if (newArray[i].CompareTo(newArray[i+1]) == -1 && descending)
+                    if (array[i].CompareTo(array[i + 1]) == -1 && descending)
                     {
                         isSorted = false;
                         break;
                     }
                 }
             }
-            
-            return newArray;
+
+            return array;
         }
 
         public static int BogoFind<T>(this T[] array, T target)
