@@ -21,8 +21,6 @@ namespace BogoLib
 
             while (!isSorted)
             {
-                
-
                 isSorted = true;
                 for (int i = 0; i < newArr.Length - 1; i++)
                 {
@@ -42,14 +40,22 @@ namespace BogoLib
                 if (isSorted)
                     continue;
 
-                if (sortingType == SortingType.Shuffle)
-                    newArr.Shuffle(rand);
+                switch (sortingType)
+                {
+                    case SortingType.Shuffle:
+                        newArr.Shuffle(rand);
+                        break;
 
-                else if (sortingType == SortingType.OneByOne)
-                    newArr.OneByOne(rand);
+                    case SortingType.OneByOne:
+                        newArr.OneByOne(rand);
+                        break;
 
-                if (sortingType == SortingType.Checking)
-                    newArr.Checking(rand, isDescending);
+                    case SortingType.Checking:
+                        newArr.Checking(rand, isDescending);
+                        break;
+
+                    default: throw new ArgumentException();
+                }
             }
 
             return newArr;
@@ -84,14 +90,9 @@ namespace BogoLib
             where T : IComparable
         {
             for (int i = 0; i < arr.Length - 1; i++)
-            {
-                if (arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending)
-                {
-                    int newIndex = rand.Next(0, i);
-                    (arr[i], arr[newIndex]) = (arr[newIndex], arr[i]);
-                }
-
-                if (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending)
+            {                
+                if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
+                    (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
                 {
                     int newIndex = rand.Next(i, arr.Length);
                     (arr[i], arr[newIndex]) = (arr[newIndex], arr[i]);
