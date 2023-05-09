@@ -1,63 +1,53 @@
 using System;
-using System.Runtime.InteropServices;
+using System.Diagnostics.CodeAnalysis;
 
 namespace BogoLib
 {
     public static class Bogo
     {
-        public enum BogoSortType
+        public enum SortingType
         {
             Shuffle,
             OneByOne,
             Checking
         }
 
-        public static T[] BogoSort<T>(this T[] array, bool descending = false, BogoSortType type = BogoSortType.Shuffle)
+        public static T[] BogoSort<T>(this T[] array, bool descending = false, bool inplace = false, SortingType sortingType = SortingType.Shuffle)
             where T : IComparable
         {
-            T[] result = (T[])array.Clone();
+            T[] newArr = inplace ? array : (T[])array.Clone();
 
-            switch (type)
-            {
-                case BogoSortType.Shuffle:
-                    result = result.Shuffle(descending);
-                    break;
-                
-                case BogoSortType.OneByOne:
-                    throw new NotImplementedException();
-                
-                case BogoSortType.Checking:
-                    throw new NotImplementedException();
-            }
-
-            return result;
-        }
-
-        private static T[] Shuffle<T>(this T[] array, bool descending = false)
-            where T : IComparable
-        {
-            Random random = Random.Shared;
+            Random rand = Random.Shared;
             bool isSorted = false;
 
             while (!isSorted)
             {
-                int n = array.Length;
-                while (n > 1)
+                switch (sortingType)
                 {
-                    int k = random.Next(n--);
-                    (array[k], array[n]) = (array[n], array[k]);
+                    case SortingType.Shuffle:
+                        newArr.Shuffle(rand);
+                        break;
+
+                    case SortingType.OneByOne:
+                        newArr.OneByOne(rand);
+                        break;
+
+                    case SortingType.Checking:
+                        throw new NotImplementedException();
+
+                    default:  throw new ArgumentException();
                 }
 
                 isSorted = true;
-                for (int i = 0; i < array.Length - 1; i++)
+                for (int i = 0; i < newArr.Length - 1; i++)
                 {
-                    if (array[i].CompareTo(array[i + 1]) == 1 && !descending)
+                    if (newArr[i].CompareTo(newArr[i + 1]) == 1 && !descending)
                     {
                         isSorted = false;
                         break;
                     }
 
-                    if (array[i].CompareTo(array[i + 1]) == -1 && descending)
+                    if (newArr[i].CompareTo(newArr[i + 1]) == -1 && descending)
                     {
                         isSorted = false;
                         break;
@@ -65,34 +55,58 @@ namespace BogoLib
                 }
             }
 
-            return array;
+            return newArr;
         }
 
-        public static int BogoFind<T>(this T[] array, T target)
+        private static T[] Shuffle<T>(this T[] arr, Random rand)
+        {
+            int n = arr.Length;
+            while (n > 1)
+            {
+                int k = rand.Next(n--);
+                (arr[k], arr[n]) = (arr[n], arr[k]);
+            }
+
+            return arr;
+        }
+
+        private static T[] OneByOne<T>(this T[] arr, Random rand)
+        {
+            int n = rand.Next(arr.Length);
+            int k = rand.Next(arr.Length);
+
+            while (n == k)
+                k = rand.Next(arr.Length);
+
+            (arr[k], arr[n]) = (arr[n], arr[k]);
+
+            return arr;
+        }
+
+        public static int BogoFind<T>(this T[] arr, T target)
             where T : IComparable
         {
-            if (array.Length == 0)
-                throw new Exception();
+            if (arr.Length == 0) throw new ArgumentException();
 
-            Random random = Random.Shared;
+            Random rand = Random.Shared;
 
-            bool[] usedIndex = new bool[array.Length];
+            bool[] indexesUsed = new bool[arr.Length];
             bool allChecked = false;
 
             while (!allChecked)
             {
-                int index = random.Next(array.Length);
+                int i = rand.Next(arr.Length);
 
-                while (usedIndex[index])
-                    index = random.Next(array.Length);
-                
-                usedIndex[index] = true;
+                while (indexesUsed[i])
+                    i = rand.Next(arr.Length);
 
-                if (array[index].CompareTo(target) == 0)
-                    return index;
-                
+                indexesUsed[i] = true;
+
+                if (arr[i].CompareTo(target) == 0)
+                    return i;
+
                 allChecked = true;
-                foreach (bool item in usedIndex)
+                foreach (bool item in indexesUsed)
                 {
                     if (!item)
                     {
