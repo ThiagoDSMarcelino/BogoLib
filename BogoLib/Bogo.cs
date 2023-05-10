@@ -1,166 +1,257 @@
 using System;
 
-namespace BogoLib
+namespace BogoLib;
+
+/// <summary>
+/// Collection of bogo algorithms 
+/// </summary>
+public static class Bogo
 {
     /// <summary>
-    /// Collection of bogo algorithms 
+    /// Represents all sorting modes available
     /// </summary>
-    public static class Bogo
+    public enum SortingMode : byte
     {
-        /// <summary>
-        /// Represents all sorting modes available
-        /// </summary>
-        public enum SortingMode: byte
+        Shuffle,
+        OneByOne,
+        Checking
+    }
+
+    /// <summary>
+    /// Sorts the elements of a sequence
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arr">Sequence to be sorted</param>
+    /// <param name="isDescending">True if the sequence should be sorted descending</param>
+    /// <param name="inplace"></param>
+    /// <param name="sortingMode"></param>
+    /// <returns>An <c>array</c> whose the elements are sorted</returns>
+    /// <exception cref="ArgumentException">Invalid SortingType</exception>
+    public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
+        where T : IComparable
+    {
+        T[] newArr = inplace ? arr : (T[])arr.Clone();
+
+        Random rand = Random.Shared;
+        bool isSorted = false;
+
+        while (!isSorted)
         {
-            Shuffle,
-            OneByOne,
-            Checking
-        }
-
-        /// <summary>
-        /// Sorts the elements of a sequence
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arr">Sequence to be sorted</param>
-        /// <param name="isDescending">True if the sequence should be sorted descending</param>
-        /// <param name="inplace"></param>
-        /// <param name="sortingMode"></param>
-        /// <returns>An <c>array</c> whose the elements are sorted</returns>
-        /// <exception cref="ArgumentException">Invalid SortingType</exception>
-        public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
-            where T : IComparable
-        {
-            T[] newArr = inplace ? arr : (T[])arr.Clone();
-
-            Random rand = Random.Shared;
-            bool isSorted = false;
-
-            while (!isSorted)
+            isSorted = true;
+            for (int i = 0; i < newArr.Length - 1; i++)
             {
-                isSorted = true;
-                for (int i = 0; i < newArr.Length - 1; i++)
+                if (newArr[i].CompareTo(newArr[i + 1]) == 1 && !isDescending)
                 {
-                    if (newArr[i].CompareTo(newArr[i + 1]) == 1 && !isDescending)
-                    {
-                        isSorted = false;
-                        break;
-                    }
-
-                    if (newArr[i].CompareTo(newArr[i + 1]) == -1 && isDescending)
-                    {
-                        isSorted = false;
-                        break;
-                    }
+                    isSorted = false;
+                    break;
                 }
 
-                if (isSorted)
-                    continue;
-
-                switch (sortingMode)
+                if (newArr[i].CompareTo(newArr[i + 1]) == -1 && isDescending)
                 {
-                    case SortingMode.Shuffle:
-                        newArr.Shuffle(rand);
-                        break;
-
-                    case SortingMode.OneByOne:
-                        newArr.OneByOne(rand);
-                        break;
-
-                    case SortingMode.Checking:
-                        newArr.Checking(rand, isDescending);
-                        break;
-
-                    default: throw new ArgumentException();
+                    isSorted = false;
+                    break;
                 }
             }
 
-            return newArr;
-        }
+            if (isSorted)
+                continue;
 
-        private static T[] Shuffle<T>(this T[] arr, Random rand)
-        {
-            int n = arr.Length;
-            while (n > 1)
+            switch (sortingMode)
             {
-                int k = rand.Next(n--);
-                (arr[n], arr[k]) = (arr[k], arr[n]);
-            }
+                case SortingMode.Shuffle:
+                    newArr.Shuffle(rand);
+                    break;
 
-            return arr;
+                case SortingMode.OneByOne:
+                    newArr.OneByOne(rand);
+                    break;
+
+                case SortingMode.Checking:
+                    newArr.Checking(rand, isDescending);
+                    break;
+
+                default: throw new ArgumentException();
+            }
         }
 
-        private static T[] OneByOne<T>(this T[] arr, Random rand)
+        return newArr;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arr"></param>
+    /// <param name="rand"></param>
+    /// <returns></returns>
+    private static T[] Shuffle<T>(this T[] arr, Random rand)
+    {
+        int n = arr.Length;
+        while (n > 1)
         {
-            int n = rand.Next(arr.Length);
-            int k = rand.Next(arr.Length);
-
-            while (n == k)
-                k = rand.Next(arr.Length);
-
+            int k = rand.Next(n--);
             (arr[n], arr[k]) = (arr[k], arr[n]);
-
-            return arr;
         }
 
-        private static T[] Checking<T>(this T[] arr, Random rand, bool isDescending)
-            where T : IComparable
+        return arr;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arr"></param>
+    /// <param name="rand"></param>
+    /// <returns></returns>
+    private static T[] OneByOne<T>(this T[] arr, Random rand)
+    {
+        int n = rand.Next(arr.Length);
+        int k = rand.Next(arr.Length);
+
+        while (n == k)
+            k = rand.Next(arr.Length);
+
+        (arr[n], arr[k]) = (arr[k], arr[n]);
+
+        return arr;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arr"></param>
+    /// <param name="rand"></param>
+    /// <param name="isDescending"></param>
+    /// <returns></returns>
+    private static T[] Checking<T>(this T[] arr, Random rand, bool isDescending)
+        where T : IComparable
+    {
+        for (int i = 0; i < arr.Length - 1; i++)
         {
-            for (int i = 0; i < arr.Length - 1; i++)
-            {                
-                if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
-                    (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
-                {
-                    int newIndex = rand.Next(i, arr.Length);
-                    (arr[i], arr[newIndex]) = (arr[newIndex], arr[i]);
-                }
-            }
-
-            return arr;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="arr"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
-        /// <exception cref="ArgumentException"></exception>
-        public static int BogoFind<T>(this T[] arr, T target)
-            where T : IComparable
-        {
-            if (arr.Length == 0)
-                throw new ArgumentException();
-
-            Random rand = Random.Shared;
-
-            bool[] indexesUsed = new bool[arr.Length];
-            bool allChecked = false;
-
-            while (!allChecked)
+            if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
+                (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
             {
-                int i = rand.Next(arr.Length);
+                int newIndex = rand.Next(i, arr.Length);
+                (arr[i], arr[newIndex]) = (arr[newIndex], arr[i]);
+            }
+        }
 
-                while (indexesUsed[i])
-                    i = rand.Next(arr.Length);
+        return arr;
+    }
 
-                indexesUsed[i] = true;
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="arr"></param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static int BogoFind<T>(this T[] arr, T target)
+        where T : IComparable
+    {
+        if (arr.Length == 0)
+            throw new ArgumentException();
 
-                if (arr[i].CompareTo(target) == 0)
-                    return i;
+        Random rand = Random.Shared;
 
-                allChecked = true;
-                foreach (bool item in indexesUsed)
+        bool[] indexesUsed = new bool[arr.Length];
+        bool allChecked = false;
+
+        while (!allChecked)
+        {
+            int i = rand.Next(arr.Length);
+
+            while (indexesUsed[i])
+                i = rand.Next(arr.Length);
+
+            indexesUsed[i] = true;
+
+            if (arr[i].CompareTo(target) == 0)
+                return i;
+
+            allChecked = true;
+            foreach (bool item in indexesUsed)
+            {
+                if (!item)
                 {
-                    if (!item)
-                    {
-                        allChecked = false;
-                        break;
-                    }
+                    allChecked = false;
+                    break;
                 }
             }
-
-            return -1;
         }
+
+        return -1;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="S"></param>
+    /// <returns></returns>
+    public static (int X, int Y)[] BogoConvexHull(this (int X, int Y)[] S)
+    {
+        if (S.Length < 4)
+            return S;
+
+        Random rand = Random.Shared;
+        int n = rand.Next(3, S.Length);
+        var result = new (int X, int Y)[n];
+        bool[] indexesUsed = new bool[S.Length];
+        bool isCorrect = false;
+
+        while (!isCorrect)
+        {
+            for (int i = 0; i < n; i++)
+            {
+                int randomIndex = rand.Next(S.Length);
+
+                while (indexesUsed[randomIndex])
+                    randomIndex = rand.Next(S.Length);
+
+                indexesUsed[randomIndex] = true;
+
+                result[i] = S[randomIndex];
+            }
+
+            Console.WriteLine(CheckPoint(result, S));
+
+            isCorrect = true;
+        }
+
+        return result;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="borderPoint"></param>
+    /// <param name="allPoints"></param>
+    /// <returns></returns>
+    private static bool CheckPoint((int X, int Y)[] borderPoint, (int X, int Y)[]  allPoints)
+    {
+        int area = 0;
+
+
+        foreach (var point in borderPoint)
+        {
+            for (int j = 0; j < allPoints.Length; j++)
+            {
+                (int X, int Y)
+                    init = allPoints[j],
+                    end = j < allPoints.Length - 1 ? allPoints[j + 1] : allPoints[0],
+                    U = (end.X - init.X, end.Y - init.Y),
+                    V = (point.X - end.X, point.Y - end.Y);
+
+                var F = U.X * V.Y - U.Y * V.X;
+                area += F;
+
+                if (!(F > 0))
+                    return false;
+            }
+        }
+
+        return true;
     }
 }
