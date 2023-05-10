@@ -2,16 +2,32 @@ using System;
 
 namespace BogoLib
 {
+    /// <summary>
+    /// Collection of bogo algorithms 
+    /// </summary>
     public static class Bogo
     {
-        public enum SortingType
+        /// <summary>
+        /// Represents all sorting modes available
+        /// </summary>
+        public enum SortingMode: byte
         {
             Shuffle,
             OneByOne,
             Checking
         }
 
-        public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingType sortingType = SortingType.Shuffle)
+        /// <summary>
+        /// Sorts the elements of a sequence
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr">Sequence to be sorted</param>
+        /// <param name="isDescending">True if the sequence should be sorted descending</param>
+        /// <param name="inplace"></param>
+        /// <param name="sortingMode"></param>
+        /// <returns>An <c>array</c> whose the elements are sorted</returns>
+        /// <exception cref="ArgumentException">Invalid SortingType</exception>
+        public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
             where T : IComparable
         {
             T[] newArr = inplace ? arr : (T[])arr.Clone();
@@ -40,17 +56,17 @@ namespace BogoLib
                 if (isSorted)
                     continue;
 
-                switch (sortingType)
+                switch (sortingMode)
                 {
-                    case SortingType.Shuffle:
+                    case SortingMode.Shuffle:
                         newArr.Shuffle(rand);
                         break;
 
-                    case SortingType.OneByOne:
+                    case SortingMode.OneByOne:
                         newArr.OneByOne(rand);
                         break;
 
-                    case SortingType.Checking:
+                    case SortingMode.Checking:
                         newArr.Checking(rand, isDescending);
                         break;
 
@@ -102,6 +118,14 @@ namespace BogoLib
             return arr;
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="arr"></param>
+        /// <param name="target"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public static int BogoFind<T>(this T[] arr, T target)
             where T : IComparable
         {
