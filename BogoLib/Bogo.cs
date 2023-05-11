@@ -254,4 +254,30 @@ public static class Bogo
 
         return true;
     }
+
+    /// <summary>
+    /// Randomly calculate the root of integers
+    /// </summary>
+    /// <param name="x">Number whose root you want to know</param>
+    /// <returns>Returns the root if it is exact or -1 otherwise</returns>
+    public static int BogoSqrt(int x)
+    {
+        Random rand = Random.Shared;
+        int min = 0, max = x, sqrt = rand.Next(max), exp = sqrt * sqrt;
+
+        while (exp != x)
+        {
+            if (max - min == 1)
+                return -1;
+            else if (exp < x)
+                min = sqrt;
+            else
+                max = sqrt;
+
+            sqrt = rand.Next(min, max);
+            exp = sqrt * sqrt;
+        }
+
+        return sqrt;
+    }
 }
