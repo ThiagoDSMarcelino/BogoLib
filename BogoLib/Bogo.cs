@@ -1,36 +1,42 @@
+using System.Collections.Generic;
+using System.ComponentModel;
 using System;
+using System.Linq;
 
 namespace BogoLib;
 
 /// <summary>
-/// Collection of bogo algorithms 
+/// Represents a collection of bogo algorithms 
 /// </summary>
 public static class Bogo
 {
     /// <summary>
-    /// Represents all sorting modes available
+    /// Represents all sorting modes available for BogoSort
     /// </summary>
     public enum SortingMode : byte
     {
+        [Description("Here is another")]
         Shuffle,
+        [Description("Last one")]
         OneByOne,
+        [Description("more one")]
         Checking
     }
 
     /// <summary>
-    /// Sorts the elements of a sequence
+    /// Sorts the elements of a sequence in ascending or descending.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="arr">Sequence to be sorted</param>
-    /// <param name="isDescending">True if the sequence should be sorted descending</param>
-    /// <param name="inplace"></param>
-    /// <param name="sortingMode"></param>
-    /// <returns>An <c>array</c> whose the elements are sorted</returns>
+    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+    /// <param name="source">A sequence of values to be sorted.</param>
+    /// <param name="isDescending">Indicates whether the sequence should be sorted in descending order</param>
+    /// <param name="inplace">Indicates whether the font should be modified</param>
+    /// <param name="sortingMode">Indicates which BogoSorting mode should be used</param>
+    /// <returns>An <see cref="IOrderedEnumerable{TElement}"/> whose elements are sorted.</returns>
     /// <exception cref="ArgumentException">Invalid SortingType</exception>
-    public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
+    public static T[] BogoSort<T>(this IEnumerable<T> source, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
-        T[] newArr = inplace ? arr : (T[])arr.Clone();
+        T[] newArr = source.ToArray();
 
         Random rand = Random.Shared;
         bool isSorted = false;
@@ -73,17 +79,10 @@ public static class Bogo
                 default: throw new ArgumentException();
             }
         }
-
+                
         return newArr;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="arr"></param>
-    /// <param name="rand"></param>
-    /// <returns></returns>
     private static T[] Shuffle<T>(this T[] arr, Random rand)
     {
         int n = arr.Length;
@@ -96,13 +95,6 @@ public static class Bogo
         return arr;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="arr"></param>
-    /// <param name="rand"></param>
-    /// <returns></returns>
     private static T[] OneByOne<T>(this T[] arr, Random rand)
     {
         int n = rand.Next(arr.Length);
@@ -116,14 +108,6 @@ public static class Bogo
         return arr;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="arr"></param>
-    /// <param name="rand"></param>
-    /// <param name="isDescending"></param>
-    /// <returns></returns>
     private static T[] Checking<T>(this T[] arr, Random rand, bool isDescending)
         where T : IComparable
     {
@@ -141,34 +125,34 @@ public static class Bogo
     }
 
     /// <summary>
-    /// 
+    /// Returns the first found index of the <paramref name="target"/>
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    /// <param name="arr"></param>
+    /// <typeparam name="T">The type of the elements of <paramref name="source"/>.</typeparam>
+    /// <param name="source">A sequence of values to order.</param>
     /// <param name="target"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static int BogoFind<T>(this T[] arr, T target)
+    public static int BogoFind<T>(this T[] source, T target)
         where T : IComparable
     {
-        if (arr.Length == 0)
+        if (source.Length == 0)
             throw new ArgumentException();
 
         Random rand = Random.Shared;
 
-        bool[] indexesUsed = new bool[arr.Length];
+        bool[] indexesUsed = new bool[source.Length];
         bool allChecked = false;
 
         while (!allChecked)
         {
-            int i = rand.Next(arr.Length);
+            int i = rand.Next(source.Length);
 
             while (indexesUsed[i])
-                i = rand.Next(arr.Length);
+                i = rand.Next(source.Length);
 
             indexesUsed[i] = true;
 
-            if (arr[i].CompareTo(target) == 0)
+            if (source[i].CompareTo(target) == 0)
                 return i;
 
             allChecked = true;
@@ -185,11 +169,6 @@ public static class Bogo
         return -1;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="S"></param>
-    /// <returns></returns>
     public static (int X, int Y)[] BogoConvexHull(this (int X, int Y)[] S)
     {
         if (S.Length < 4)
@@ -223,12 +202,6 @@ public static class Bogo
         return result;
     }
 
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="borderPoint"></param>
-    /// <param name="allPoints"></param>
-    /// <returns></returns>
     private static bool CheckPoint((int X, int Y)[] borderPoint, (int X, int Y)[]  allPoints)
     {
         int area = 0;
