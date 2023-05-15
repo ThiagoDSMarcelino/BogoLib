@@ -15,11 +15,11 @@ public static class Bogo
     /// </summary>
     public enum SortingMode : byte
     {
-        [Description("Here is another")]
+        [Description("Swap the entire sequence at a time")]
         Shuffle,
-        [Description("Last one")]
+        [Description("Swaps one element for another at a time")]
         OneByOne,
-        [Description("more one")]
+        [Description("Checks the element before swapping it")]
         Checking
     }
 
@@ -36,7 +36,7 @@ public static class Bogo
     public static T[] BogoSort<T>(this IEnumerable<T> source, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
-        T[] newArr = source.ToArray();
+        T[] newArr = inplace ? (T[])source.ToArray().Clone() : source.ToArray();
 
         Random rand = Random.Shared;
         bool isSorted = false;
@@ -76,7 +76,7 @@ public static class Bogo
                     newArr.Checking(rand, isDescending);
                     break;
 
-                default: throw new ArgumentException();
+                default: throw new ArgumentException($"{sortingMode} is not a valid sorting mode");
             }
         }
                 
@@ -136,7 +136,7 @@ public static class Bogo
         where T : IComparable
     {
         if (source.Length == 0)
-            throw new ArgumentException();
+            throw new ArgumentException($"{source} is empty");
 
         Random rand = Random.Shared;
 
