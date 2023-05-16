@@ -23,11 +23,12 @@ public static class BogoMathF
         if (x == float.PositiveInfinity)
             return float.PositiveInfinity;
 
-        int
+        long
             min = 0,
-            max = (int)x;
+            max = (long)x;
+
         float
-            sqrt = Random.Shared.Next(max),
+            sqrt = Random.Shared.NextInt64(max),
             exp = sqrt * sqrt;
 
         while (max - min != 1)
@@ -37,7 +38,7 @@ public static class BogoMathF
             else
                 max = (int)sqrt;
 
-            sqrt = Random.Shared.Next(min, max);
+            sqrt = Random.Shared.NextInt64(min, max);
             exp = sqrt * sqrt;
         }
 
@@ -50,11 +51,11 @@ public static class BogoMathF
             while (max - min != 1)
             {
                 if (exp < x)
-                    min = (int)randNum;
+                    min = (long)randNum;
                 else
-                    max = (int)randNum;
+                    max = (long)randNum;
 
-                randNum = Random.Shared.Next(min, max);
+                randNum = Random.Shared.NextInt64(min, max);
                 float aux = sqrt + randNum / i;
                 exp = aux * aux;
             }
