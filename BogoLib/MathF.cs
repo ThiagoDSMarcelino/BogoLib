@@ -1,42 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace BogoLib
+namespace BogoLib;
+
+public static class BogoMathF
 {
-    public static class BogoMathF
+    /// <summary>
+    /// Returns the square root of a specified number.
+    /// </summary>
+    /// <param name="x">Number whose root you want to know</param>
+    /// <returns>Returns the root if it is exact or -1 otherwise</returns>
+    public static float Sqrt(float x)
     {
-        /// <summary>
-        /// Randomly calculate the root
-        /// </summary>
-        /// <param name="x">Number whose root you want to know</param>
-        /// <returns>Returns the root if it is exact or -1 otherwise</returns>
-        public static float Sqrt(double x)
+        if (x < 0)
+            return float.NaN;
+
+        int
+            min = 0,
+            max = (int)x;
+        float
+            sqrt = Random.Shared.Next(max),
+            exp = sqrt * sqrt;
+
+        while (max - min != 1)
         {
-            if (x < 0) return float.NaN;
+            if (exp < x)
+                min = (int)sqrt;
+            else
+                max = (int)sqrt;
 
-            int
-                min = 0,
-                max = (int)x,
-                sqrt = Random.Shared.Next(max),
-                exp = sqrt * sqrt;
+            sqrt = Random.Shared.Next(min, max);
+            exp = sqrt * sqrt;
+        }
 
-            while (exp != x)
+        for (int i = 10; i <= 1E9; i *= 10)
+        {
+            min = 0;
+            max = 10;
+            float randNum = 0;
+
+            while (max - min != 1)
             {
-                if (max - min == 1)
-                    return -1;
-                else if (exp < x)
-                    min = sqrt;
+                if (exp < x)
+                    min = (int)randNum;
                 else
-                    max = sqrt;
+                    max = (int)randNum;
 
-                sqrt = Random.Shared.Next(min, max);
-                exp = sqrt * sqrt;
+                randNum = Random.Shared.Next(min, max);
+                float aux = sqrt + randNum / i;
+                exp = aux * aux;
             }
 
-            return sqrt;
+            sqrt += randNum / i;
         }
+
+        return sqrt;
     }
 }
