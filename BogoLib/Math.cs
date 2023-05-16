@@ -15,21 +15,39 @@ public static class BogoMath
         if (x < 0)
             return double.NaN;
 
+        double r = 1;
+        if (x > Int32.MaxValue)
+            r = x / Int32.MaxValue;
+
         int
             min = 0,
-            max = (int)x;
+            max = (Int32)(x / r);
         double
-            sqrt = Random.Shared.Next(max),
+            sqrt = Random.Shared.Next(max) * r,
             exp = sqrt * sqrt;
 
         while (max - min != 1)
         {
             if (exp < x)
-                min = (int)sqrt;
-            else
-                max = (int)sqrt;
+            {
+                if (sqrt > Int32.MaxValue)
+                    r = sqrt / Int32.MaxValue;
+                else
+                    r = 1;
 
-            sqrt = Random.Shared.Next(min, max);
+                min = (Int32)(sqrt / r);
+            }
+            else
+            {
+                if (sqrt > Int32.MaxValue)
+                    r = sqrt / Int32.MaxValue;
+                else
+                    r = 1;
+                    
+                max = (Int32)(sqrt / r);
+            }
+
+            sqrt = Random.Shared.Next(min, max) * r;
             exp = sqrt * sqrt;
         }
 
@@ -42,11 +60,25 @@ public static class BogoMath
             while (max - min != 1)
             {
                 if (exp < x)
-                    min = (int)randNum;
-                else
-                    max = (int)randNum;
+                {
+                    if (randNum > Int32.MaxValue)
+                        r = randNum / Int32.MaxValue;
+                    else
+                        r = 1;
 
-                randNum = Random.Shared.Next(min, max);
+                    min = (Int32)(randNum / r);
+                }
+                else
+                {
+                    if (randNum > Int32.MaxValue)
+                        r = randNum / Int32.MaxValue;
+                    else
+                        r = 1;
+
+                    max = (Int32)(randNum / r);
+                }
+
+                randNum = Random.Shared.Next(min, max) * r;
                 double aux = sqrt + randNum / i;
                 exp = aux * aux;
             }
