@@ -5,14 +5,23 @@ namespace BogoLib;
 public static class BogoMathF
 {
     /// <summary>
-    /// Returns the square root of a specified number.
+    /// Returns the square root of a specified number
     /// </summary>
-    /// <param name="x">Number whose root you want to know</param>
-    /// <returns>Returns the root if it is exact or -1 otherwise</returns>
+    /// <param name="x">Value to calculate the square root</param>
+    /// <returns>
+    /// Values ​​referring to the table based on the parameter <paramref name="x" /><br /><br />
+    /// <b>Is Positive</b> -- Square root positive or zero<br /><br />
+    /// <b>Is Negative</b> -- <see cref="float.NaN" /><br /><br />
+    /// <b>Equal <see cref="float.NaN" /></b> -- <see cref="float.NaN" /><br /><br />
+    /// <b>Equal <see cref="float.PositiveInfinity" /></b> -- <see cref="float.PositiveInfinity" /><br /><br />
+    /// </returns>
     public static float Sqrt(float x)
     {
-        if (x < 0)
+        if (x < 0 || float.IsNaN(x))
             return float.NaN;
+
+        if (x == float.PositiveInfinity)
+            return float.PositiveInfinity;
 
         int
             min = 0,

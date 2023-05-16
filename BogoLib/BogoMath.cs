@@ -1,19 +1,27 @@
 ﻿using System;
-using System.Runtime.Intrinsics.X86;
 
 namespace BogoLib;
 
 public static class BogoMath
 {
     /// <summary>
-    /// Returns the square root of a specified number.
+    /// Returns the square root of a specified number
     /// </summary>
-    /// <param name="x">Number whose root you want to know</param>
-    /// <returns>Returns the root if it is exact or -1 otherwise</returns>
+    /// <param name="x">Value to calculate the square root</param>
+    /// <returns>
+    /// Values ​​referring to the table based on the parameter <paramref name="x" /><br /><br />
+    /// <b>Is Positive</b> -- Square root positive or zero<br /><br />
+    /// <b>Is Negative</b> -- <see cref="double.NaN" /><br /><br />
+    /// <b>Equal <see cref="double.NaN" /></b> -- <see cref="double.NaN" /><br /><br />
+    /// <b>Equal <see cref="double.PositiveInfinity" /></b> -- <see cref="double.PositiveInfinity" /><br /><br />
+    /// </returns>
     public static double Sqrt(double x)
     {
-        if (x < 0)
+        if (x < 0 || double.IsNaN(x))
             return double.NaN;
+        
+        if (x == double.PositiveInfinity)
+            return double.PositiveInfinity;
 
         int
             min = 0,
