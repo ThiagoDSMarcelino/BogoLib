@@ -70,4 +70,6 @@ public static class Bogo
 
         return true;
     }
+
+    // TODO Agoritmo de Divisão do Processador
 }

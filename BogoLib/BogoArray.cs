@@ -64,8 +64,6 @@ public static class BogoArray
                 case SortingMode.Checking:
                     newArr.Checking(isDescending);
                     break;
-
-                default: throw new ArgumentException();
             }
         }
 

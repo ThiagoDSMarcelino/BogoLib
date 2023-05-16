@@ -25,7 +25,9 @@ public partial class BogoEnumerable<T> : IEnumerable<T>
         }
     }
 
-    public IEnumerator GetEnumerator() => throw new NotImplementedException();
+    public IEnumerator GetEnumerator() =>
+        throw new NotImplementedException();
 
-    IEnumerator<T> IEnumerable<T>.GetEnumerator() => throw new NotImplementedException();
+    IEnumerator<T> IEnumerable<T>.GetEnumerator() =>
+        throw new NotImplementedException();
 }

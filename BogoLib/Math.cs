@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.Intrinsics.X86;
 
 namespace BogoLib;
 
@@ -11,37 +12,48 @@ public static class BogoMath
     /// <returns>Returns the root if it is exact or -1 otherwise</returns>
     public static double Sqrt(double x)
     {
-        if (x < 0) return double.NaN;
+        if (x < 0)
+            return double.NaN;
 
         int
             min = 0,
             max = (int)x;
         double
             sqrt = Random.Shared.Next(max),
-            exp = sqrt * sqrt,
-            aux = 0;
-        bool
-            flag = true;
+            exp = sqrt * sqrt;
 
-        while (exp != x)
+        while (max - min != 1)
         {
-            if (max - min == 1) flag = false;
-            else if (exp < x) min = (int)sqrt;
-            else max = (int)sqrt;
-
-            if (flag)
-            {
-                sqrt = Random.Shared.Next(min, max);
-                exp = sqrt * sqrt;
-            }
+            if (exp < x)
+                min = (int)sqrt;
             else
-            {
-                aux = sqrt + Random.Shared.NextDouble();
-                exp = aux * aux;
-            }
+                max = (int)sqrt;
+
+            sqrt = Random.Shared.Next(min, max);
+            exp = sqrt * sqrt;
         }
 
-        sqrt = aux;
+        for (long i = 10; i <= 1E17; i *= 10)
+        {
+            min = 0;
+            max = 10;
+            double randNum = 0;
+
+            while (max - min != 1)
+            {
+                if (exp < x)
+                    min = (int)randNum;
+                else
+                    max = (int)randNum;
+
+                randNum = Random.Shared.Next(min, max);
+                double aux = sqrt + randNum / i;
+                exp = aux * aux;
+            }
+
+            sqrt += randNum / i;
+        }
+
         return sqrt;
     }
 }
