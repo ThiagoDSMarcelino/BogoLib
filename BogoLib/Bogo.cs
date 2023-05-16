@@ -160,18 +160,30 @@ public static class Bogo
         return -1;
     }
 
+    public struct Point
+    {
+        public int X { get; set; }
+        public int Y { get; set; }
+
+        public Point(int x, int y)
+        {
+            X = x;
+            Y = y;
+        }
+    }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="S"></param>
     /// <returns></returns>
-    public static (int X, int Y)[] BogoConvexHull(this (int X, int Y)[] S)
+    public static Point[] BogoConvexHull(this Point[] S)
     {
         if (S.Length < 4)
             return S;
 
         int n = Random.Shared.Next(3, S.Length);
-        var result = new (int X, int Y)[n];
+        var result = new Point[n];
         bool[] indexesUsed = new bool[S.Length];
         bool isCorrect = false;
 
@@ -198,29 +210,25 @@ public static class Bogo
         return result;
     }
 
-    private static void OrderPoints(this (int X, int Y)[] S)
+    private static void OrderPoints(this Point[] S)
     {
         var angle = Math.Atan2(S[1].Y - S[0].Y, S[1].X - S[0].X) * (180 / Math.PI);
         Console.WriteLine(angle);
     }
 
-    private static bool CheckPoint((int X, int Y)[] borderPoint, (int X, int Y)[]  allPoints)
+    private static bool CheckPoint(Point[] borderPoint, Point[]  allPoints)
     {
-        int area = 0;
-
-
-        foreach (var (X, Y) in borderPoint)
+        foreach (var point in borderPoint)
         {
             for (int j = 0; j < allPoints.Length; j++)
             {
-                (int X, int Y)
+                Point
                     init = allPoints[j],
                     end = j < allPoints.Length - 1 ? allPoints[j + 1] : allPoints[0],
-                    U = (end.X - init.X, end.Y - init.Y),
-                    V = (X - end.X, Y - end.Y);
+                    U = new(end.X - init.X, end.Y - init.Y),
+                    V = new(point.X - end.X, point.Y - end.Y);
 
                 var F = U.X * V.Y - U.Y * V.X;
-                area += F;
 
                 if (!(F > 0))
                     return false;
