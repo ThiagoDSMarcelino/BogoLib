@@ -23,21 +23,21 @@ public static class BogoMath
         if (x == double.PositiveInfinity)
             return double.PositiveInfinity;
 
-        int
+        long
             min = 0,
-            max = (int)x;
+            max = (long)x;
         double
-            sqrt = Random.Shared.Next(max),
+            sqrt = Random.Shared.NextInt64(max),
             exp = sqrt * sqrt;
 
         while (max - min != 1)
         {
             if (exp < x)
-                min = (int)sqrt;
+                min = (long)sqrt;
             else
-                max = (int)sqrt;
+                max = (long)sqrt;
 
-            sqrt = Random.Shared.Next(min, max);
+            sqrt = Random.Shared.NextInt64(min, max);
             exp = sqrt * sqrt;
         }
 
@@ -50,11 +50,11 @@ public static class BogoMath
             while (max - min != 1)
             {
                 if (exp < x)
-                    min = (int)randNum;
+                    min = (long)randNum;
                 else
-                    max = (int)randNum;
+                    max = (long)randNum;
 
-                randNum = Random.Shared.Next(min, max);
+                randNum = Random.Shared.NextInt64(min, max);
                 double aux = sqrt + randNum / i;
                 exp = aux * aux;
             }
