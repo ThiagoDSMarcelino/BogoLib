@@ -130,7 +130,7 @@ public static class Bogo
         where T : IComparable
     {
         if (arr.Length == 0)
-            throw new ArgumentException();
+            throw new ArgumentException("Arr cannot be empty", nameof(arr));
 
         bool allChecked = false;
 
@@ -159,6 +159,4 @@ public static class Bogo
 
         return -1;
     }
-
-    // TODO Processor Division Algorithm
 }
