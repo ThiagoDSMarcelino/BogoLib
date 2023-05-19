@@ -104,6 +104,9 @@ public static class Math
     /// Returns the square root of a specified number.
     /// </summary>
     /// <param name="x">Number whose root you want to know</param>
+    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
+    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
+    /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the positive square root of x</returns>
     public static double Sqrt(double x, double atol = 1E-6, int maxIter = 10000, bool verbose = false)
     {
@@ -174,5 +177,125 @@ public static class Math
         }
 
         return sqrt;
+    }
+
+    /// <summary>
+    /// Returns the root of a specified function.
+    /// </summary>
+    /// <param name="func">Function whose root you want to know</param>
+    /// <param name="x0">Smallest value for the analysis interval, optional</param>
+    /// <param name="x1">Hghest value for the analysis interval, optional</param>
+    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
+    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
+    /// <param name="verbose">Write information about numerical errors to the console</param>
+    /// <returns>Returns the root of func</returns>
+    public static float Root(System.Func<float, float> func, float x0 = float.NaN, float x1 = float.NaN, float atol = 1E-6F, int maxIter = 1000, bool verbose = false)
+    {
+        float left = x0;
+        float right = x1;
+        float rt = float.NaN;
+        float y = float.NaN;
+
+        int iter = 0;
+
+        if (float.IsNaN(left))
+            left = - 0.1F * float.MaxValue * System.Random.Shared.NextSingle();
+
+        if (float.IsNaN(right))
+            right = 0.1F * float.MaxValue * System.Random.Shared.NextSingle();
+
+        for (iter = 0; iter < maxIter; iter++)
+        {
+            rt = left + (right - left) * System.Random.Shared.NextSingle();
+            y = func(rt);
+
+            if (y * func(left) < 0)
+                right = rt;
+            else
+                left = rt;
+
+            iter++;
+
+            if (Abs(right - left) <= atol)
+                break;
+        }
+
+        if (verbose)
+        {
+            float rtBetter = rt;
+
+            for (byte _ = 0; _ < 8; _++)
+                rtBetter -= func(rtBetter) * 1E-6F / (func(rtBetter) - func(rtBetter - 1E-6F));  // Newton's method
+
+            System.Console.WriteLine($"Iterations: {iter}");
+            System.Console.WriteLine($"Aprox. root: {rt:E15}");
+            System.Console.WriteLine($"Max error: {Abs(right - left):E15}");
+            System.Console.WriteLine($"Aprox. error: {Abs(rt - rtBetter):E15}");
+        }
+
+        if (Abs(right - left) <= atol)
+            return rt;
+
+        throw new System.Exception("Convergence not successul");
+    }
+
+    /// <summary>
+    /// Returns the root of a specified function.
+    /// </summary>
+    /// <param name="func">Function whose root you want to know</param>
+    /// <param name="x0">Smallest value for the analysis interval, optional</param>
+    /// <param name="x1">Hghest value for the analysis interval, optional</param>
+    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
+    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
+    /// <param name="verbose">Write information about numerical errors to the console</param>
+    /// <returns>Returns the root of func</returns>
+    public static double Root(System.Func<double, double> func, double x0 = double.NaN, double x1 = double.NaN, double atol = 1E-16, int maxIter = 10000, bool verbose = false)
+    {
+        double left = x0;
+        double right = x1;
+        double rt = double.NaN;
+        double y = double.NaN;
+
+        int iter = 0;
+
+        if (double.IsNaN(left))
+            left = - 0.1 * double.MaxValue * System.Random.Shared.NextDouble();
+
+        if (double.IsNaN(right))
+            right = 0.1 * double.MaxValue * System.Random.Shared.NextDouble();
+
+        for (iter = 0; iter < maxIter; iter++)
+        {
+            rt = left + (right - left) * System.Random.Shared.NextDouble();
+            y = func(rt);
+
+            if (y * func(left) < 0)
+                right = rt;
+            else
+                left = rt;
+
+            iter++;
+
+            if (Abs(right - left) <= atol)
+                break;
+        }
+
+        if (verbose)
+        {
+            double rtBetter = rt;
+
+            for (byte _ = 0; _ < 8; _++)
+                rtBetter -= func(rtBetter) * 1E-12 / (func(rtBetter) - func(rtBetter - 1E-12));  // Newton's method
+
+            System.Console.WriteLine($"Iterations: {iter}");
+            System.Console.WriteLine($"Aprox. root: {rt:E15}");
+            System.Console.WriteLine($"Max error: {Abs(right - left):E15}");
+            System.Console.WriteLine($"Aprox. error: {Abs(rt - rtBetter):E15}");
+        }
+
+        if (Abs(right - left) <= atol)
+            return rt;
+
+        throw new System.Exception("Convergence not successul");
     }
 }
