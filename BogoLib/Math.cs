@@ -14,9 +14,6 @@ public static class Math
     /// Returns the absolute value of a specified number.
     /// </summary>
     /// <param name="x">Number whose absolute value you want to know</param>
-    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
-    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
-    /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the positive of x</returns>
     public static double Abs(double x)
         => x < 0 ? -x : x;
