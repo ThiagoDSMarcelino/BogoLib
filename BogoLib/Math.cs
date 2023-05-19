@@ -1,89 +1,176 @@
-﻿using System;
-using System.Runtime.Intrinsics.X86;
+﻿namespace BogoLib;
 
-namespace BogoLib;
-
-public static class BogoMath
+public static class Math
 {
+    /// <summary>
+    /// Returns the absolute value of a specified number.
+    /// </summary>
+    /// <param name="x">Number whose absolute value you want to know</param>
+    /// <returns>Returns the positive of x</returns>
+    public static float Abs(float x)
+        => x < 0 ? -x : x;
+
+    /// <summary>
+    /// Returns the absolute value of a specified number.
+    /// </summary>
+    /// <param name="x">Number whose absolute value you want to know</param>
+    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
+    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
+    /// <param name="verbose">Write information about numerical errors to the console</param>
+    /// <returns>Returns the positive of x</returns>
+    public static double Abs(double x)
+        => x < 0 ? -x : x;
+
     /// <summary>
     /// Returns the square root of a specified number.
     /// </summary>
     /// <param name="x">Number whose root you want to know</param>
-    /// <returns>Returns the root if it is exact or -1 otherwise</returns>
-    public static double Sqrt(double x)
+    /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
+    /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
+    /// <param name="verbose">Write information about numerical errors to the console</param>
+    /// <returns>Returns the positive square root of x</returns>
+    public static float Sqrt(float x, float atol = 1E-2F, int maxIter = 10000, bool verbose = false)
     {
-        if (x < 0)
-            return double.NaN;
+        if (float.IsNaN(x) || x < 0)
+            return float.NaN;
 
-        double r = 1;
-        if (x > Int32.MaxValue)
-            r = x / Int32.MaxValue;
+        if (float.IsPositiveInfinity(x))
+            return float.PositiveInfinity;
 
-        int
-            min = 0,
-            max = (Int32)(x / r);
-        double
-            sqrt = Random.Shared.Next(max) * r,
-            exp = sqrt * sqrt;
+        // Initial guess
+        float sqrt = x * System.Random.Shared.Next(0, 100000) / 100000;  // Random value
+        // float sqrt = x / System.MathF.Pow(10, (int)(System.MathF.Log10(x) / 2));  // Good initial approximation
 
-        while (max - min != 1)
+        float exp = sqrt * sqrt;
+        float minSqrt = 0;
+        float maxSqrt = x;
+
+        float factor = System.MathF.Pow(10, (int)System.MathF.Log10(maxSqrt));
+        float aux = sqrt;
+
+        float rand;
+        int minRand;
+        int maxRand;
+
+        int iter = 0;
+
+        do
         {
-            if (exp < x)
-            {
-                if (sqrt > Int32.MaxValue)
-                    r = sqrt / Int32.MaxValue;
-                else
-                    r = 1;
-
-                min = (Int32)(sqrt / r);
-            }
-            else
-            {
-                if (sqrt > Int32.MaxValue)
-                    r = sqrt / Int32.MaxValue;
-                else
-                    r = 1;
-                    
-                max = (Int32)(sqrt / r);
-            }
-
-            sqrt = Random.Shared.Next(min, max) * r;
-            exp = sqrt * sqrt;
-        }
-
-        for (long i = 10; i <= 1E17; i *= 10)
-        {
-            min = 0;
-            max = 10;
-            double randNum = 0;
-
-            while (max - min != 1)
+            do
             {
                 if (exp < x)
-                {
-                    if (randNum > Int32.MaxValue)
-                        r = randNum / Int32.MaxValue;
-                    else
-                        r = 1;
+                    minSqrt = aux > minSqrt ? aux : minSqrt;
+                else if (aux > 0)
+                    maxSqrt = aux < maxSqrt ? aux : maxSqrt;
 
-                    min = (Int32)(randNum / r);
-                }
-                else
-                {
-                    if (randNum > Int32.MaxValue)
-                        r = randNum / Int32.MaxValue;
-                    else
-                        r = 1;
+                minRand = -9; // (Int32)(((aux % (10 * factor)) - (aux % factor)) / factor) * MAGIC;
+                maxRand = 10; // (1 + (Int32)(((max_f % (10 * factor)) - (max_f % factor)) / factor)) * MAGIC;
 
-                    max = (Int32)(randNum / r);
-                }
-
-                randNum = Random.Shared.Next(min, max) * r;
-                double aux = sqrt + randNum / i;
+                rand = sqrt + factor * System.Random.Shared.Next(minRand, maxRand);
+                aux = rand > 0 ? rand : 0;
                 exp = aux * aux;
-            }
 
-            sqrt += randNum / i;
+                if (Abs(exp - x) < Abs(sqrt * sqrt - x))
+                    sqrt = aux;
+
+                iter++;
+
+            } while ((maxSqrt - minSqrt > 1.9F * factor) && (maxSqrt - minSqrt >= atol) && (iter < maxIter));
+
+            factor /= 10;
+
+        } while ((maxSqrt - minSqrt >= atol) && (iter < maxIter));
+
+        exp = sqrt * sqrt;
+
+        if (verbose)
+        {
+            float sqrtBetter = sqrt;
+
+            for (byte _ = 0; _ < 8; _++)
+                sqrtBetter = sqrt - (sqrt * sqrt - x) / (sqrt + sqrtBetter);  // Custom algorithm, provides better accuracy
+                // sqrtBetter = (sqrtBetter + x / sqrtBetter) / 2;  // Newton's method
+
+            System.Console.WriteLine($"Iterations: {iter}");
+            System.Console.WriteLine($"Max error: {Abs(maxSqrt - minSqrt):E15}");
+            System.Console.WriteLine($"Squared error: {Abs(exp - x):E15}");
+            System.Console.WriteLine($"Aprox. error: {Abs(sqrt - sqrtBetter):E15}");
+        }
+
+        return sqrt;
+    }
+
+    /// <summary>
+    /// Returns the square root of a specified number.
+    /// </summary>
+    /// <param name="x">Number whose root you want to know</param>
+    /// <returns>Returns the positive square root of x</returns>
+    public static double Sqrt(double x, double atol = 1E-6, int maxIter = 10000, bool verbose = false)
+    {
+        if (double.IsNaN(x) || x < 0)
+            return double.NaN;
+
+        if (double.IsPositiveInfinity(x))
+            return double.PositiveInfinity;
+
+        // Initial guess
+        double sqrt = x * System.Random.Shared.Next(0, 100000) / 100000;  // Random value
+        // double sqrt = x / System.MathF.Pow(10, (int)(System.MathF.Log10(x) / 2));  // Good initial approximation
+
+        double exp = sqrt * sqrt;
+        double minSqrt = 0;
+        double maxSqrt = x;
+
+        double factor = System.Math.Pow(10, (int)System.Math.Log10(maxSqrt));
+        double aux = sqrt;
+
+        double rand;
+        int minRand;
+        int maxRand;
+
+        int iter = 0;
+
+        do
+        {
+            do
+            {
+                if (exp < x && aux >= 0)
+                    minSqrt = aux > minSqrt ? aux : minSqrt;
+                else if (exp > x && aux >= 0)
+                    maxSqrt = aux < maxSqrt ? aux : maxSqrt;
+
+                minRand = -9; // (Int32)(((aux % (10 * factor)) - (aux % factor)) / factor) * MAGIC;
+                maxRand = 10; // (1 + (Int32)(((max_f % (10 * factor)) - (max_f % factor)) / factor)) * MAGIC;
+
+                rand = sqrt + factor * System.Random.Shared.Next(minRand, maxRand);
+                aux = rand > 0 ? rand : 0;
+                exp = aux * aux;
+
+                if (Abs(exp - x) < Abs(sqrt * sqrt - x))
+                    sqrt = aux;
+
+                iter++;
+
+            } while ((maxSqrt - minSqrt > 1.9 * factor) && (maxSqrt - minSqrt >= atol) && (iter < maxIter));
+
+            factor /= 10;
+
+        } while ((maxSqrt - minSqrt >= atol) && (iter < maxIter));
+
+        exp = sqrt * sqrt;
+
+        if (verbose)
+        {
+            double sqrtBetter = sqrt;
+
+            for (byte _ = 0; _ < 8; _++)
+                sqrtBetter = sqrt - (sqrt * sqrt - x) / (sqrt + sqrtBetter);  // Custom algorithm, provides better accuracy
+                // sqrtBetter = (sqrtBetter + x / sqrtBetter) / 2;  // Newton's method
+
+            System.Console.WriteLine($"Iterations: {iter}");
+            System.Console.WriteLine($"Max error: {Abs(maxSqrt - minSqrt):E15}");
+            System.Console.WriteLine($"Squared error: {Abs(exp - x):E15}");
+            System.Console.WriteLine($"Aprox. error: {Abs(sqrt - sqrtBetter):E15}");
         }
 
         return sqrt;
