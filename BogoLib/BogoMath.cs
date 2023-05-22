@@ -1,6 +1,6 @@
 ﻿namespace BogoLib;
 
-public static class Math
+public static class BogoMath
 {
     /// <summary>
     /// Returns the absolute value of a specified number.
