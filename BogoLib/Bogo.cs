@@ -1,5 +1,3 @@
-using System;
-
 namespace BogoLib;
 
 /// <summary>
@@ -23,15 +21,15 @@ public static class Bogo
     /// <typeparam name="T">The type of the elements of <paramref name="arr" /></typeparam>
     /// <param name="arr">A array of values to be sorted</param>
     /// <param name="isDescending">Indicates whether the array should be sorted in descending order</param>
-    /// <param name="inplace">Indicates whether the font should be modified</param>
+    /// <param name="inPlace">Indicates whether the font should be modified</param>
     /// <param name="sortingMode">Indicates which BogoSorting mode should be used</param>
     /// <returns>
-    /// Sorted <see cref="Array" /> of <typeparamref name="T"> nothing if <paramref name="inplace" /> parameter is true
+    /// Sorted <see cref="Array" /> of <typeparamref name="T"> nothing if <paramref name="inPlace" /> parameter is true
     /// </returns>
-    public static T[] BogoSort<T>(this T[] arr, bool isDescending = false, bool inplace = false, SortingMode sortingMode = SortingMode.Shuffle)
+    public static T[] Sort<T>(this T[] arr, bool isDescending = false, bool inPlace = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
-        T[] newArr = inplace ? arr : (T[])arr.Clone();
+        T[] newArr = inPlace ? arr : (T[])arr.Clone();
         bool isSorted = false;
 
         while (!isSorted)
@@ -79,7 +77,7 @@ public static class Bogo
         int n = arr.Length;
         while (n > 1)
         {
-            int k = Random.Shared.Next(n--);
+            int k = Shared.Next(n--);
             arr.Swap(n, k);
         }
 
@@ -88,11 +86,11 @@ public static class Bogo
 
     private static T[] OneByOne<T>(this T[] arr)
     {
-        int n = Random.Shared.Next(arr.Length);
-        int k = Random.Shared.Next(arr.Length);
+        int n = Shared.Next(arr.Length);
+        int k = Shared.Next(arr.Length);
 
         while (n == k)
-            k = Random.Shared.Next(arr.Length);
+            k = Shared.Next(arr.Length);
 
         arr.Swap(n, k);
 
@@ -107,7 +105,7 @@ public static class Bogo
             if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
                 (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
             {
-                int newIndex = Random.Shared.Next(i, arr.Length);
+                int newIndex = Shared.Next(i, arr.Length);
                 arr.Swap(i, newIndex);
             }
         }
@@ -126,7 +124,7 @@ public static class Bogo
     /// <param name="target"></param>
     /// <returns></returns>
     /// <exception cref="ArgumentException"></exception>
-    public static int BogoFind<T>(this T[] arr, T target)
+    public static int Find<T>(this T[] arr, T target)
         where T : IComparable
     {
         if (arr.Length == 0)
@@ -136,11 +134,11 @@ public static class Bogo
 
         while (!allChecked)
         {
-            int i = Random.Shared.Next(arr.Length);
+            int i = Shared.Next(arr.Length);
             bool[] indexesUsed = new bool[arr.Length];
 
             while (indexesUsed[i])
-                i = Random.Shared.Next(arr.Length);
+                i = Shared.Next(arr.Length);
 
             indexesUsed[i] = true;
 
