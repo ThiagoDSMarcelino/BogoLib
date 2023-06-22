@@ -4,30 +4,26 @@ using System.Linq;
 namespace BogoLib;
 
 /// <summary>
-/// Represents a collection of bogo algorithms 
+/// Contains bogo algorithms that work with <see cref="ICollection{T}"/>
 /// </summary>
 public static partial class BogoCollection
 {
     /// <summary>
-    /// Returns the first found index of the <paramref name="target" />
+    /// Find an element within an <see cref="ICollection{T}"/>
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="array" /></typeparam>
-    /// <param name="array">A array of values to order</param>
-    /// <param name="target"></param>
-    /// <returns></returns>
-    /// <exception cref="ArgumentException"></exception>
+    /// <typeparam name="T">Any object that inherits from <see cref="IComparable"/></typeparam>
+    /// <param name="source"><typeparamref name="T"/> object collection</param>
+    /// <param name="target"><typeparamref name="T"/> object that wants to find the index</param>
+    /// <returns><paramref name="target"/> index or -1 if it is not found in the <paramref name="source"/></returns>
     public static int BogoFind<T>(this ICollection<T> source, T target)
         where T : IComparable
     {
         int n = source.Count;
 
-        if (n == 0)
-            throw new ArgumentException("Arr cannot be empty", nameof(source));
-
         var arr = source.CollectionToArray();
 
         int i = 0;
-        bool allChecked = false;
+        bool allChecked = n == 0;
         bool[] indexesUsed = new bool[n];
 
         while (!allChecked)
@@ -49,16 +45,13 @@ public static partial class BogoCollection
     }
 
     /// <summary>
-    /// Sorts the elements in an entire <see cref="Array" /> using the <see cref="IComparable{in T}" />
+    /// Sort the elements of a <see cref="ICollection{T}"/>
     /// </summary>
-    /// <typeparam name="T">The type of the elements of <paramref name="arr" /></typeparam>
-    /// <param name="arr">A array of values to be sorted</param>
-    /// <param name="isDescending">Indicates whether the array should be sorted in descending order</param>
-    /// <param name="inPlace">Indicates whether the font should be modified</param>
-    /// <param name="sortingMode">Indicates which BogoSorting mode should be used</param>
-    /// <returns>
-    /// Sorted <see cref="Array" /> of <typeparamref name="T"> nothing if <paramref name="inPlace" /> parameter is true
-    /// </returns>
+    /// <typeparam name="T">Any object that inherits from <see cref="IComparable"/></typeparam>
+    /// <param name="source"><typeparamref name="T"/> object collection</param>
+    /// <param name="isDescending">Informs whether the collection should be sorted in descending order</param>
+    /// <param name="sortingMode">Informs the bogo sorting algorithm that should be used</param>
+    /// <returns></returns>
     public static ICollection<T> BogoSort<T>(this ICollection<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
@@ -102,7 +95,7 @@ public static partial class BogoCollection
     }
 
     /// <summary>
-    /// Represents all sorting modes available for BogoSort
+    /// Represents all available sorting algorithms for BogoSort
     /// </summary>
     public enum SortingMode : byte
     {
