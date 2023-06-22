@@ -1,9 +1,53 @@
 using System.Collections.Generic;
+using System.Linq;
 
 namespace BogoLib;
 
-public static partial class Bogo
+/// <summary>
+/// Represents a collection of bogo algorithms 
+/// </summary>
+public static partial class BogoCollection
 {
+    /// <summary>
+    /// Returns the first found index of the <paramref name="target" />
+    /// </summary>
+    /// <typeparam name="T">The type of the elements of <paramref name="array" /></typeparam>
+    /// <param name="array">A array of values to order</param>
+    /// <param name="target"></param>
+    /// <returns></returns>
+    /// <exception cref="ArgumentException"></exception>
+    public static int BogoFind<T>(this ICollection<T> source, T target)
+        where T : IComparable
+    {
+        int n = source.Count;
+
+        if (n == 0)
+            throw new ArgumentException("Arr cannot be empty", nameof(source));
+
+        var arr = source.CollectionToArray();
+
+        int i = 0;
+        bool allChecked = false;
+        bool[] indexesUsed = new bool[n];
+
+        while (!allChecked)
+        {
+            do
+            {
+                i = Shared.Next(n);
+            } while (indexesUsed[i]);
+
+            indexesUsed[i] = true;
+
+            if (arr[i].CompareTo(target) == 0)
+                return i;
+
+            allChecked = indexesUsed.All(index => index);
+        }
+
+        return -1;
+    }
+
     /// <summary>
     /// Sorts the elements in an entire <see cref="Array" /> using the <see cref="IComparable{in T}" />
     /// </summary>
@@ -15,11 +59,10 @@ public static partial class Bogo
     /// <returns>
     /// Sorted <see cref="Array" /> of <typeparamref name="T"> nothing if <paramref name="inPlace" /> parameter is true
     /// </returns>
-    public static ICollection<T> Sort<T>(this ICollection<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
+    public static ICollection<T> BogoSort<T>(this ICollection<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
-        var arr = new T[source.Count];
-        source.CopyTo(arr, 0);
+        var arr = source.CollectionToArray();
 
         bool isSorted = false;
 
@@ -28,13 +71,8 @@ public static partial class Bogo
             isSorted = true;
             for (int i = 0; i < arr.Length - 1; i++)
             {
-                if (arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending)
-                {
-                    isSorted = false;
-                    break;
-                }
-
-                if (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending)
+                if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
+                    (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
                 {
                     isSorted = false;
                     break;
@@ -71,6 +109,14 @@ public static partial class Bogo
         Shuffle,
         OneByOne,
         Checking
+    }
+
+    public static T[] CollectionToArray<T>(this ICollection<T> source)
+    {
+        var result = new T[source.Count];
+        source.CopyTo(result, 0);
+
+        return result;
     }
 
     private static T[] Shuffle<T>(this T[] arr)

@@ -147,7 +147,7 @@ public static class BogoMath
     /// </summary>
     /// <param name="func">Function whose root you want to know</param>
     /// <param name="x0">Smallest value for the analysis interval, optional</param>
-    /// <param name="x1">Hghest value for the analysis interval, optional</param>
+    /// <param name="x1">Highest value for the analysis interval, optional</param>
     /// <param name="atol">Absolute tolerance for the convergence of the algorithm</param>
     /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
     /// <param name="verbose">Write information about numerical errors to the console</param>
