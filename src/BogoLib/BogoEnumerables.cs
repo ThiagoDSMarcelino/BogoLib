@@ -4,23 +4,22 @@ using System.Linq;
 namespace BogoLib;
 
 /// <summary>
-/// Contains bogo algorithms that work with <see cref="ICollection{T}"/>
+/// Contains bogo algorithms that work with <see cref="IEnumerable{T}"/>
 /// </summary>
-public static partial class BogoCollection
+public static partial class BogoEnumerables
 {
     /// <summary>
-    /// Find an element within an <see cref="ICollection{T}"/>
+    /// Find an element within an <see cref="IEnumerable{T}"/>
     /// </summary>
     /// <typeparam name="T">Any object that inherits from <see cref="IComparable"/></typeparam>
     /// <param name="source"><typeparamref name="T"/> object collection</param>
     /// <param name="target"><typeparamref name="T"/> object that wants to find the index</param>
     /// <returns><paramref name="target"/> index or -1 if it is not found in the <paramref name="source"/></returns>
-    public static int BogoFind<T>(this ICollection<T> source, T target)
+    public static int BogoFind<T>(this IEnumerable<T> source, T target)
         where T : IComparable
     {
-        int n = source.Count;
-
-        var arr = source.CollectionToArray();
+        T[] arr = source.ToArray();
+        int n = arr.Length;
 
         int i = 0;
         bool allChecked = n == 0;
@@ -45,17 +44,17 @@ public static partial class BogoCollection
     }
 
     /// <summary>
-    /// Sort the elements of a <see cref="ICollection{T}"/>
+    /// Sort the elements of a <see cref="IEnumerable{T}"/>
     /// </summary>
     /// <typeparam name="T">Any object that inherits from <see cref="IComparable"/></typeparam>
     /// <param name="source"><typeparamref name="T"/> object collection</param>
     /// <param name="isDescending">Informs whether the collection should be sorted in descending order</param>
     /// <param name="sortingMode">Informs the bogo sorting algorithm that should be used</param>
     /// <returns></returns>
-    public static ICollection<T> BogoSort<T>(this ICollection<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
+    public static IEnumerable<T> BogoSort<T>(this IEnumerable<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
-        var arr = source.CollectionToArray();
+        var arr = source.ToArray();
 
         bool isSorted = false;
 
@@ -102,14 +101,6 @@ public static partial class BogoCollection
         Shuffle,
         OneByOne,
         Checking
-    }
-
-    public static T[] CollectionToArray<T>(this ICollection<T> source)
-    {
-        var result = new T[source.Count];
-        source.CopyTo(result, 0);
-
-        return result;
     }
 
     private static T[] Shuffle<T>(this T[] arr)

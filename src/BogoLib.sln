@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib", "src\BogoLib\BogoLib.csproj", "{F1F3F59D-94FF-4F36-B895-011C67D972C8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib", "BogoLib\BogoLib.csproj", "{F1F3F59D-94FF-4F36-B895-011C67D972C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib.Test", "src\BogoLib.Test\BogoLib.Test.csproj", "{69C81F9E-078C-49A2-8C50-B15869A959F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib.Test", "BogoLib.Test\BogoLib.Test.csproj", "{69C81F9E-078C-49A2-8C50-B15869A959F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
