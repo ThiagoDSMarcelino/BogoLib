@@ -1,6 +1,6 @@
 # BogoLib
-![GitHub](https://img.shields.io/github/license/ThiagoDSMarcelino/BogoLib?color=blue)
-![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/BogoLib)
+![GitHub](https://img.shields.io/github/license/ThiagoDSMarcelino/bogo-lib?color=blue)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/bogo-lib)
 
 ## Introduction
 This library has the goal of implements several bogo algorithms, this way will be easier to compare the inefficiency of these algorithms in relation to others.
