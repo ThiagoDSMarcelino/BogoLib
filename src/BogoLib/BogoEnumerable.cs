@@ -6,7 +6,7 @@ namespace BogoLib;
 /// <summary>
 /// Contains bogo algorithms that work with <see cref="IEnumerable{T}"/>
 /// </summary>
-public static partial class BogoEnumerables
+public static partial class BogoEnumerable
 {
     /// <summary>
     /// Find an element within an <see cref="IEnumerable{T}"/>
