@@ -16,12 +16,12 @@ public static partial class BogoMath
         if (points.Length < 4)
             return points;
 
-        var indexesUsed = new bool[points.Length];
         PointF[] result;
         bool isCorrect;
 
         do
         {
+            var indexesUsed = new bool[points.Length];
             int n = Shared.Next(3, points.Length + 1);
             result = new PointF[n];
 
@@ -40,7 +40,14 @@ public static partial class BogoMath
                 result[i] = points[randomIndex];
             }
 
-            isCorrect = IsConvex(points);
+            result = result.Sort();
+
+            var insidePoints = points
+                .Where(point => 
+                    !result.Any(r => r.X == point.X && r.Y == point.Y))
+                .ToArray();
+
+            isCorrect = IsConvexHull(result, insidePoints);
         } while (!isCorrect);
 
         return result;
@@ -62,26 +69,46 @@ public static partial class BogoMath
         return result;
     }
 
-    private static bool IsConvex(PointF[] points)
+    private static bool IsConvexHull(PointF[] edges, PointF[] points)
     {
-        var sortedPoints = points.Sort();
+        int i = 0;
 
-        for (int i = 0; i < sortedPoints.Length; i++)
+        do
         {
+            var count = 0;
 
-            var x = i;
-            var y = i + 1;
-            var z = i + 2;
+            for (int j = 0; j < edges.Length; j++)
+            {
+                var x = j;
+                var y = j + 1;
+                var z = j + 2;
 
-            var A = sortedPoints[x];
-            var B = sortedPoints[y < sortedPoints.Length ? y : y - sortedPoints.Length];
-            var C = sortedPoints[z < sortedPoints.Length ? z : z - sortedPoints.Length];
+                var A = edges[x];
+                var B = edges[y < edges.Length ? y : y - edges.Length];
+                var C = edges[z < edges.Length ? z : z - edges.Length];
 
-            var result = GetAngle(A, B, C);
+                var result = GetAngle(A, B, C);
 
-            if (result < 0)
+                if (result < 0)
+                    return false;
+
+                if (i >= points.Length)
+                    continue;
+                var point = points[i];
+
+                var isWithinRange = (point.Y < A.Y) != (point.Y < B.Y);
+
+                var isOnTheLeft = point.X < A.X + ((point.Y - A.Y) / (B.Y - A.Y)) * (B.X - A.X);
+
+                if (isWithinRange && isOnTheLeft)
+                    count++;
+            }
+
+            if (count % 2 == 0 && i < points.Length)
                 return false;
-        }
+
+        } while (i++ < points.Length);
+
 
         return true;
     }

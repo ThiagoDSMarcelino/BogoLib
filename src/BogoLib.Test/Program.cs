@@ -6,14 +6,14 @@ using System.Text;
 var points = new PointF[]
 {
     // Square Test
-    new PointF(0, 0), new PointF(0, 5),
-    new PointF(5, 5), new PointF(5, 0)
+    //new PointF(0, 0), new PointF(0, 5),
+    //new PointF(5, 5), new PointF(5, 0)
     
     // Castle Test
-    //new PointF(1, 1), new PointF(1, 5),
-    //new PointF(2, 6), new PointF(3, 4),
-    //new PointF(4, 6), new PointF(5, 5),
-    //new PointF(5, 1)
+    new PointF(1, 1), new PointF(1, 5),
+    new PointF(2, 6), new PointF(3, 4),
+    new PointF(4, 6), new PointF(5, 5),
+    new PointF(5, 1)
 
     // ConvexHull Final test
     //new PointF(1, 0), new PointF(3.5f, 5),
@@ -40,7 +40,7 @@ Console.WriteLine(sb.ToString());
 //var descendingArr = arr.BogoSort(true);
 
 // Square root Test
-//Console.WriteLine(BogoMath.Sqrt(27));
+//Console.WriteLine(BogoMath.BogoSqrt(27));
 
 // Find Test
 //Console.WriteLine(arr.BogoFind(8));

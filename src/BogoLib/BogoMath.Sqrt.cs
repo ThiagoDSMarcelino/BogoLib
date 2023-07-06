@@ -10,7 +10,7 @@ public static partial class BogoMath
     /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
     /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the positive square root of x</returns>
-    public static float Sqrt(float x, float atol = 1E-2F, int maxIter = 10000, bool verbose = false)
+    public static float BogoSqrt(float x, float atol = 1E-2F, int maxIter = 10000, bool verbose = false)
     {
         if (float.IsNaN(x) || x < 0)
             return float.NaN;
@@ -80,7 +80,7 @@ public static partial class BogoMath
     /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
     /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the positive square root of x</returns>
-    public static double Sqrt(double x, double atol = 1E-6, int maxIter = 10000, bool verbose = false)
+    public static double BogoSqrt(double x, double atol = 1E-6, int maxIter = 10000, bool verbose = false)
     {
         if (double.IsNaN(x) || x < 0)
             return double.NaN;
@@ -152,7 +152,7 @@ public static partial class BogoMath
     /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
     /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the root of func</returns>
-    public static float Root(Func<float, float> func, float x0 = float.NaN, float x1 = float.NaN, float atol = 1E-6F, int maxIter = 1000, bool verbose = false)
+    public static float BogoRoot(Func<float, float> func, float x0 = float.NaN, float x1 = float.NaN, float atol = 1E-6F, int maxIter = 1000, bool verbose = false)
     {
         float left = x0;
         float right = x1;
@@ -205,7 +205,7 @@ public static partial class BogoMath
     /// <param name="maxIter">Maximum number of iterations of the algorithm</param>
     /// <param name="verbose">Write information about numerical errors to the console</param>
     /// <returns>Returns the root of func</returns>
-    public static double Root(Func<double, double> func, double x0 = double.NaN, double x1 = double.NaN, double atol = 1E-16, int maxIter = 10000, bool verbose = false)
+    public static double BogoRoot(Func<double, double> func, double x0 = double.NaN, double x1 = double.NaN, double atol = 1E-16, int maxIter = 10000, bool verbose = false)
     {
         double left = x0;
         double right = x1;
