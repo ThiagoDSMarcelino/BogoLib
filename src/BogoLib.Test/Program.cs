@@ -3,6 +3,9 @@ using System;
 using System.Drawing;
 using System.Text;
 
+StringBuilder sb = new();
+
+// ConvexHull Test
 var points = new PointF[]
 {
     // Square Test
@@ -21,28 +24,24 @@ var points = new PointF[]
     //new PointF(1.7f, -3)
 };
 
-StringBuilder sb = new();
-
 var test = points.BogoConvexHull();
-
-sb.Append("\n\nConvexHull = { ");
+sb.Append("ConvexHull = { ");
 foreach (var point in test)
     sb.Append($"({point.X}, {point.Y}); ");
-
-sb.Append("} n = " + test.Length);
-
-sb.Append("\n\n\n");
-
-Console.WriteLine(sb.ToString());
+sb.Append("} n = " + test.Length + '\n');
 
 // Sorting Test
-//var arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-//var descendingArr = arr.BogoSort(true);
+var arr = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+var sortedArr = arr.BogoSort(true);
+sb.Append("\nSorted array:\n");
+foreach (var item in sortedArr)
+    sb.Append($"{item}, ");
+
 
 // Square root Test
-//Console.WriteLine(BogoMath.BogoSqrt(27));
+sb.Append($"\n\nSquare root of 27 = {BogoMath.BogoSqrt(27)}\n");
 
 // Find Test
-//Console.WriteLine(arr.BogoFind(8));
-//foreach (var item in descendingArr)
-//    Console.Write($"{item}, ");
+sb.Append($"\n\nIndex of number 9 in the sorted array: {sortedArr.BogoFind(9)}");
+
+Console.WriteLine(sb.ToString());

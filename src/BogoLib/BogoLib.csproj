@@ -4,9 +4,12 @@
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
 
-		<PackageId>BogoLib</PackageId>
-		<Authors>Thiago dos Santos Marcelino</Authors>
-		<PackageVersion>0.1.0</PackageVersion>
+	<PackageId>BogoLib</PackageId>
+	<Authors>
+		Thiago dos Santos Marcelino,
+		Marcos Augusto Belizario
+	</Authors>
+	<PackageVersion>0.2.0</PackageVersion>
   </PropertyGroup>
 
 </Project>
