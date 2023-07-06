@@ -3,6 +3,10 @@
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <Nullable>enable</Nullable>
+
+		<PackageId>BogoLib</PackageId>
+		<Authors>Thiago dos Santos Marcelino</Authors>
+		<PackageVersion>0.1.0</PackageVersion>
   </PropertyGroup>
 
 </Project>
