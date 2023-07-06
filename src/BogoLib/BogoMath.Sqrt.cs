@@ -1,6 +1,6 @@
 ﻿namespace BogoLib;
 
-public static class BogoMath
+public static partial class BogoMath
 {
     /// <summary>
     /// Returns the square root of a specified number.

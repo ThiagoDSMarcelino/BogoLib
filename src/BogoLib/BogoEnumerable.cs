@@ -6,7 +6,7 @@ namespace BogoLib;
 /// <summary>
 /// Contains bogo algorithms that work with <see cref="IEnumerable{T}"/>
 /// </summary>
-public static partial class BogoEnumerable
+public static class BogoEnumerable
 {
     /// <summary>
     /// Find an element within an <see cref="IEnumerable{T}"/>
@@ -144,6 +144,6 @@ public static partial class BogoEnumerable
         return arr;
     }
 
-    public static void Swap<T>(ref T val1, ref T val2) =>
+    private static void Swap<T>(ref T val1, ref T val2) =>
         (val1, val2) = (val2, val1);
 }
