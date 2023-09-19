@@ -5,7 +5,7 @@ VisualStudioVersion = 17.5.33530.505
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib", "BogoLib\BogoLib.csproj", "{F1F3F59D-94FF-4F36-B895-011C67D972C8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BogoLib.Test", "BogoLib.Test\BogoLib.Test.csproj", "{69C81F9E-078C-49A2-8C50-B15869A959F5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BogoLib.Tests", "BogoLib.Tests\BogoLib.Tests.csproj", "{40512685-0364-43B5-9961-197DC23B62B2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{F1F3F59D-94FF-4F36-B895-011C67D972C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1F3F59D-94FF-4F36-B895-011C67D972C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1F3F59D-94FF-4F36-B895-011C67D972C8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{69C81F9E-078C-49A2-8C50-B15869A959F5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{69C81F9E-078C-49A2-8C50-B15869A959F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{69C81F9E-078C-49A2-8C50-B15869A959F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{69C81F9E-078C-49A2-8C50-B15869A959F5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40512685-0364-43B5-9961-197DC23B62B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40512685-0364-43B5-9961-197DC23B62B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40512685-0364-43B5-9961-197DC23B62B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40512685-0364-43B5-9961-197DC23B62B2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

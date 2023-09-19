@@ -93,16 +93,6 @@ public static class BogoEnumerable
         return arr;
     }
 
-    /// <summary>
-    /// Represents all available sorting algorithms for BogoSort
-    /// </summary>
-    public enum SortingMode : byte
-    {
-        Shuffle,
-        OneByOne,
-        Checking
-    }
-
     private static T[] Shuffle<T>(this T[] arr)
     {
         int n = arr.Length;
@@ -146,4 +136,14 @@ public static class BogoEnumerable
 
     private static void Swap<T>(ref T val1, ref T val2) =>
         (val1, val2) = (val2, val1);
+}
+
+/// <summary>
+/// Represents all available sorting algorithms for BogoSort
+/// </summary>
+public enum SortingMode : byte
+{
+    Shuffle,
+    OneByOne,
+    Checking
 }
