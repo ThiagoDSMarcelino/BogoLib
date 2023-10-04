@@ -1,0 +1,9 @@
+{
+    "editor.formatOnSave": true,
+    "[csharp]": {
+        "editor.formatOnSave": true
+    },
+    "cSpell.words": [
+        "Bogo"
+    ]
+}

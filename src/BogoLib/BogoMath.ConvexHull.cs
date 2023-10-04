@@ -7,10 +7,10 @@ namespace BogoLib;
 public static partial class BogoMath
 {
     /// <summary>
-    /// 
+    /// Computes the convex hull of a set of points using a Bogo algorithm, returning an array of PointF.
     /// </summary>
-    /// <param name="points"></param>
-    /// <returns></returns>
+    /// <param name="points">An array of points.</param>
+    /// <returns>An array of points representing the convex hull.</returns>
     public static PointF[] BogoConvexHull(this (int X, int Y)[] points)
     {
         var pointFs = points.Select(p => new PointF(p.X, p.Y)).ToArray();
@@ -20,50 +20,26 @@ public static partial class BogoMath
     }
 
     /// <summary>
-    /// 
+    /// Computes the convex hull of a set of points using a Bogo algorithm, returning an array of PointF.
     /// </summary>
-    /// <param name="points"></param>
-    /// <returns></returns>
+    /// <param name="points">An array of points.</param>
+    /// <returns>An array of points representing the convex hull.</returns>
     public static PointF[] BogoConvexHull(this PointF[] points)
     {
-        if (points.Length < 4)
+        if (points.Length < 3)
             return points;
 
-        PointF[] result;
-        bool isCorrect;
-
-        do
+        while (true)
         {
-            var indexesUsed = new bool[points.Length];
             int n = Shared.Next(3, points.Length + 1);
-            result = new PointF[n];
 
-            for (int i = 0; i < n; i++)
-            {
-                int randomIndex;
+            var result = points.OrderBy(p => Shared.Next()).Take(n).ToArray().SortConvexPoints();
 
-                do
-                {
-                    randomIndex = Shared.Next(points.Length);
-                }
-                while (indexesUsed[randomIndex]);
+            var innerPoints = points.Except(result).ToArray();
 
-                indexesUsed[randomIndex] = true;
-
-                result[i] = points[randomIndex];
-            }
-
-            result = result.Sort();
-
-            var insidePoints = points
-                .Where(point =>
-                    !result.Any(r => r.X == point.X && r.Y == point.Y))
-                .ToArray();
-
-            isCorrect = IsConvexHull(result, insidePoints);
-        } while (!isCorrect);
-
-        return result;
+            if (IsConvexHull(result, innerPoints))
+                return result;
+        }
     }
 
     private static bool IsConvexHull(PointF[] edges, PointF[] points)
@@ -95,7 +71,7 @@ public static partial class BogoMath
 
                 var isWithinRange = (point.Y < A.Y) != (point.Y < B.Y);
 
-                var isOnTheLeft = point.X < A.X + ((point.Y - A.Y) / (B.Y - A.Y)) * (B.X - A.X);
+                var isOnTheLeft = point.X < A.X + (point.Y - A.Y) / (B.Y - A.Y) * (B.X - A.X);
 
                 if (isWithinRange && isOnTheLeft)
                     count++;
@@ -110,7 +86,7 @@ public static partial class BogoMath
         return true;
     }
 
-    private static PointF[] Sort(this PointF[] points)
+    private static PointF[] SortConvexPoints(this PointF[] points)
     {
         var minX = points.MinBy(p => p.X).X;
 
