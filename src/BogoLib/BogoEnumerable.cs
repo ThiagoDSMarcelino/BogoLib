@@ -51,29 +51,13 @@ public static class BogoEnumerable
     /// <param name="isDescending">Informs whether the collection should be sorted in descending order</param>
     /// <param name="sortingMode">Informs the bogo sorting algorithm that should be used</param>
     /// <returns></returns>
-    public static IEnumerable<T> BogoSort<T>(this IEnumerable<T> source, bool isDescending = false, SortingMode sortingMode = SortingMode.Shuffle)
+    public static IEnumerable<T> BogoSort<T>(this IEnumerable<T> source, SortingMode sortingMode = SortingMode.Shuffle)
         where T : IComparable
     {
         var arr = source.ToArray();
 
-        bool isSorted = false;
-
-        while (!isSorted)
+        while (!arr.IsAscending())
         {
-            isSorted = true;
-            for (int i = 0; i < arr.Length - 1; i++)
-            {
-                if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
-                    (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
-                {
-                    isSorted = false;
-                    break;
-                }
-            }
-
-            if (isSorted)
-                continue;
-
             switch (sortingMode)
             {
                 case SortingMode.Shuffle:
@@ -85,12 +69,70 @@ public static class BogoEnumerable
                     break;
 
                 case SortingMode.Checking:
-                    arr.Checking(isDescending);
+                    arr.CheckingAscending();
                     break;
             }
         }
 
         return arr;
+    }
+
+    public static IEnumerable<T> BogoSortDescending<T>(this IEnumerable<T> source, SortingMode sortingMode = SortingMode.Shuffle)
+        where T : IComparable
+    {
+        var arr = source.ToArray();
+
+        while (!arr.IsDescending())
+        {
+            switch (sortingMode)
+            {
+                case SortingMode.Shuffle:
+                    arr.Shuffle();
+                    break;
+
+                case SortingMode.OneByOne:
+                    arr.OneByOne();
+                    break;
+
+                case SortingMode.Checking:
+                    arr.CheckingDescending();
+                    break;
+            }
+        }
+
+        return arr;
+    }
+
+    private static bool IsAscending<T>(this T[] arr)
+        where T : IComparable
+    {
+        bool isSorted = true;
+        for (int i = 0; i < arr.Length - 1; i++)
+        {
+            if (arr[i].CompareTo(arr[i + 1]) == 1)
+            {
+                isSorted = false;
+                break;
+            }
+        }
+
+        return isSorted;
+    }
+
+    private static bool IsDescending<T>(this T[] arr)
+        where T : IComparable
+    {
+        bool isSorted = true;
+        for (int i = 0; i < arr.Length - 1; i++)
+        {
+            if (arr[i].CompareTo(arr[i + 1]) == -1)
+            {
+                isSorted = false;
+                break;
+            }
+        }
+
+        return isSorted;
     }
 
     private static T[] Shuffle<T>(this T[] arr)
@@ -118,13 +160,27 @@ public static class BogoEnumerable
         return arr;
     }
 
-    private static T[] Checking<T>(this T[] arr, bool isDescending)
+    private static T[] CheckingAscending<T>(this T[] arr)
         where T : IComparable
     {
         for (int i = 0; i < arr.Length - 1; i++)
         {
-            if ((arr[i].CompareTo(arr[i + 1]) == 1 && !isDescending) ||
-                (arr[i].CompareTo(arr[i + 1]) == -1 && isDescending))
+            if (arr[i].CompareTo(arr[i + 1]) == 1)
+            {
+                int randIndex = Shared.Next(i, arr.Length);
+                Swap(ref arr[i], ref arr[randIndex]);
+            }
+        }
+
+        return arr;
+    }
+
+    private static T[] CheckingDescending<T>(this T[] arr)
+        where T : IComparable
+    {
+        for (int i = 0; i < arr.Length - 1; i++)
+        {
+            if (arr[i].CompareTo(arr[i + 1]) == -1)
             {
                 int randIndex = Shared.Next(i, arr.Length);
                 Swap(ref arr[i], ref arr[randIndex]);
@@ -136,14 +192,4 @@ public static class BogoEnumerable
 
     private static void Swap<T>(ref T val1, ref T val2) =>
         (val1, val2) = (val2, val1);
-}
-
-/// <summary>
-/// Represents all available sorting algorithms for BogoSort
-/// </summary>
-public enum SortingMode : byte
-{
-    Shuffle,
-    OneByOne,
-    Checking
 }

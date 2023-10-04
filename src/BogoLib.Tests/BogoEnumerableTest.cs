@@ -19,7 +19,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.OrderDescending();
-        var bogoSortedList = list.BogoSort(true);
+        var bogoSortedList = list.BogoSortDescending();
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
@@ -30,7 +30,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.Order();
-        var bogoSortedList = list.BogoSort(false, SortingMode.OneByOne);
+        var bogoSortedList = list.BogoSort(SortingMode.OneByOne);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
@@ -41,7 +41,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.OrderDescending();
-        var bogoSortedList = list.BogoSort(true, SortingMode.OneByOne);
+        var bogoSortedList = list.BogoSortDescending(SortingMode.OneByOne);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
@@ -52,7 +52,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.Order();
-        var bogoSortedList = list.BogoSort(false, SortingMode.Checking);
+        var bogoSortedList = list.BogoSort(SortingMode.Checking);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
@@ -63,7 +63,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.OrderDescending();
-        var bogoSortedList = list.BogoSort(true, SortingMode.Checking);
+        var bogoSortedList = list.BogoSortDescending(SortingMode.Checking);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
