@@ -8,7 +8,7 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.Order();
-        var bogoSortedList = list.BogoSort();
+        var bogoSortedList = list.BogoSort(SortingMode.Shuffle);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
@@ -19,29 +19,29 @@ public class BogoEnumerableTest
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.OrderDescending();
-        var bogoSortedList = list.BogoSortDescending();
+        var bogoSortedList = list.BogoSortDescending(SortingMode.Shuffle);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
-    
+
     [Fact]
-    public void OneByOne()
+    public void Swap()
     {
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.Order();
-        var bogoSortedList = list.BogoSort(SortingMode.OneByOne);
+        var bogoSortedList = list.BogoSort(SortingMode.Swap);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }
 
     [Fact]
-    public void OneByOneDescending()
+    public void SwapDescending()
     {
         var list = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
 
         var sortedList = list.OrderDescending();
-        var bogoSortedList = list.BogoSortDescending(SortingMode.OneByOne);
+        var bogoSortedList = list.BogoSortDescending(SortingMode.Swap);
 
         Assert.True(sortedList.CompareSortedLists(bogoSortedList));
     }

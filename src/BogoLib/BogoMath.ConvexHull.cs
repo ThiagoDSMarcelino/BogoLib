@@ -11,6 +11,19 @@ public static partial class BogoMath
     /// </summary>
     /// <param name="points"></param>
     /// <returns></returns>
+    public static PointF[] BogoConvexHull(this (int X, int Y)[] points)
+    {
+        var pointFs = points.Select(p => new PointF(p.X, p.Y)).ToArray();
+        var result = BogoConvexHull(pointFs);
+
+        return result;
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="points"></param>
+    /// <returns></returns>
     public static PointF[] BogoConvexHull(this PointF[] points)
     {
         if (points.Length < 4)
@@ -43,28 +56,12 @@ public static partial class BogoMath
             result = result.Sort();
 
             var insidePoints = points
-                .Where(point => 
+                .Where(point =>
                     !result.Any(r => r.X == point.X && r.Y == point.Y))
                 .ToArray();
 
             isCorrect = IsConvexHull(result, insidePoints);
         } while (!isCorrect);
-
-        return result;
-    }
-    
-    /// <summary>
-    /// 
-    /// </summary>
-    /// <param name="points"></param>
-    /// <returns></returns>
-    public static PointF[] BogoConvexHull(this (int X, int Y)[] points)
-    {
-        PointF[] PointFs = new PointF[points.Length];
-        for (int i = 0; i < points.Length; i++)
-            PointFs[i] = new(points[i].X, points[i].Y);
-
-        var result = BogoConvexHull(PointFs);
 
         return result;
     }

@@ -5,7 +5,18 @@ namespace BogoLib;
 /// </summary>
 public enum SortingMode : byte
 {
+    /// <summary>
+    /// Shuffle all elements of the collection
+    /// </summary>
     Shuffle,
-    OneByOne,
+
+    /// <summary>
+    /// Swap two elements of the collection
+    /// </summary>
+    Swap,
+
+    /// <summary>
+    /// Swap two elements of the collection if they are not in order
+    /// </summary>
     Checking
 }
