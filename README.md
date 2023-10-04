@@ -3,11 +3,13 @@
 ![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/ThiagoDSMarcelino/bogo-lib)
 
 ## Introduction
-This library has the goal of implements several bogo algorithms, this way will be easier to compare the inefficiency of these algorithms in relation to others.
+This library aims to implement various Bogo algorithms, making it easier to compare their inefficiencies with other algorithms.
 
 ## What's a valid Bogo Algorithm?
-A valid bogo algorithm needs to be checked without any other complicated algorithm, for example:
+A valid Bogo algorithm should be verifiable without employing any other complex algorithm. 
 
-Square root is a valid algorithm, because we just need to multiply the result by itself, and then we will know if it's the right result
+For example:
 
-Factorial isn't a valid algorithm, because we will need to write a conventional factorial algorithm to check if the result it's right
+* Square root is a valid algorithm since we only need to multiply the result by itself to verify its correctness.
+
+* Factorial isn't a valid algorithm because we would need to implement a conventional factorial algorithm to verify its correctness.
